@@ -1,11 +1,26 @@
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
 import { theme } from "../theme";
 type Props = {
   name: string;
   isCompleted?: boolean;
+  onDelete: () => void;
+  onToggleComplete: () => void;
 };
-export default function ShoppingListItem({ name, isCompleted }: Props) {
+export default function ShoppingListItem({
+  name,
+  isCompleted,
+  onDelete,
+  onToggleComplete,
+}: Props) {
   const handleDelete = () => {
     Alert.alert(
       `Are you sure you want to delete ${name} ?`,
@@ -13,7 +28,7 @@ export default function ShoppingListItem({ name, isCompleted }: Props) {
       [
         {
           text: "Yes",
-          onPress: () => console.log("deleted"),
+          onPress: () => onDelete(),
           style: "destructive",
         },
         {
@@ -24,19 +39,31 @@ export default function ShoppingListItem({ name, isCompleted }: Props) {
     );
   };
   return (
-    <View
+    <Pressable
       style={[styles.itemContainer, isCompleted && styles.completedContainer]}
+      onPress={onToggleComplete}
     >
-      <Text style={[styles.itemText, isCompleted && styles.completedText]}>
-        {name}
-      </Text>
-      <TouchableOpacity
-        onPress={handleDelete}
-        activeOpacity={0.8}
-      >
-        <AntDesign name="delete" size={24} color={isCompleted ? theme.colorGrey:theme.colorRed} />
+      <View style={styles.row}>
+        <Entypo
+          name={isCompleted ? "check" : "circle"}
+          size={24}
+          color={isCompleted ? theme.colorGrey : theme.colorCerulean}
+        />
+        <Text
+          style={[styles.itemText, isCompleted && styles.completedText]}
+          numberOfLines={1}
+        >
+          {name}
+        </Text>
+      </View>
+      <TouchableOpacity onPress={handleDelete} activeOpacity={0.8}>
+        <AntDesign
+          name="delete"
+          size={24}
+          color={isCompleted ? theme.colorGrey : theme.colorRed}
+        />
       </TouchableOpacity>
-    </View>
+    </Pressable>
   );
 }
 const styles = StyleSheet.create({
@@ -47,7 +74,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: theme.colorCerulean,
     paddingVertical: 16,
-    paddingHorizontal: 18,
+    paddingHorizontal: 5,
   },
   completedContainer: {
     backgroundColor: theme.colorLightGrey,
@@ -58,5 +85,10 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
     textDecorationColor: theme.colorGrey,
   },
-  itemText: { fontSize: 18, fontWeight: "200" },
+  itemText: { fontSize: 18, fontWeight: "200", flex: 1 },
+  row: {
+    flexDirection: "row",
+    gap: 8,
+    flex: 1,
+  },
 });

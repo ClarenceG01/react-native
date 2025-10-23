@@ -25,7 +25,7 @@ export default function RootLayout() {
         options={{
           title: "Counter",
           tabBarIcon: ({ color, size }) => (
-            <AntDesign name="clockcircleo" size={size} color={color} />
+            <AntDesign name="clock-circle" size={size} color={color} />
           ),
           headerShown: false,
         }}
